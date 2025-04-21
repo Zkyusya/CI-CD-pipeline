@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: university-chatbot
+  labels:
+    app: university-chatbot
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: university-chatbot
+  template:
+    metadata:
+      labels:
+        app: university-chatbot
+    spec:
+      containers:
+      - name: chatbot
+        image: gcr.io/YOUR_PROJECT_ID/university-chatbot:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      restartPolicy: Always

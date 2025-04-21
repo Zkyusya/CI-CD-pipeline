@@ -1,0 +1,20 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/university-chatbot:$COMMIT_SHA', './backend']
+  
+  # Push the Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/university-chatbot:$COMMIT_SHA']
+  
+  # Deploy to GKE
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    args:
+      - 'run'
+      - '--filename=./kubernetes'
+      - '--image=gcr.io/$PROJECT_ID/university-chatbot:$COMMIT_SHA'
+      - '--location=us-central1-a'
+      - '--cluster=university-chatbot-cluster'
+
+images:
+  - 'gcr.io/$PROJECT_ID/university-chatbot:$COMMIT_SHA'
