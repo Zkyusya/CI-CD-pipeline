@@ -20,7 +20,7 @@ COPY backend/ ./
 RUN mkdir -p /app/static
 
 # Expose the port your app will listen on
-EXPOSE 8030
+EXPOSE 8080
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8030", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
